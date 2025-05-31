@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiệp Mời</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .invitation-card {
+            background: linear-gradient(145deg, #0f0f0f, #1f1f1f);
+            border: 2px solid #333;
+            border-radius: 20px;
+            box-shadow:
+                0 20px 40px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            max-width: 900px;
+            width: 100%;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .invitation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #666, transparent);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: #cccccc;
+            font-size: 1.1rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .main-info {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: #ffffff;
+        }
+
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 15px;
+            color: #888;
+        }
+
+        .info-label {
+            font-weight: 500;
+            min-width: 100px;
+            color: #aaa;
+        }
+
+        .info-value {
+            font-weight: 400;
+            color: #fff;
+        }
+
+        .activities-section {
+            margin-top: 40px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #666, transparent);
+            margin: 10px auto;
+        }
+
+        .activity {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .activity:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .activity-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .photos-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .photo-placeholder {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #2a2a2a, #3a3a3a);
+            border: 2px dashed #555;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            object-fit: cover;
+        }
+
+        .photo-placeholder:hover {
+            border-color: #777;
+            background: linear-gradient(135deg, #3a3a3a, #4a4a4a);
+            transform: scale(1.02);
+        }
+
+
+        .activity-description {
+            text-align: center;
+            color: #ccc;
+            font-style: italic;
+            margin-bottom: 15px;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .activity-time {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .time-label {
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-right: 10px;
+        }
+
+        .join-section {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .join-btn {
+            background: linear-gradient(135deg, #333, #555);
+            border: 2px solid #666;
+            color: #fff;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .join-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .join-btn:hover {
+            background: linear-gradient(135deg, #444, #666);
+            border-color: #777;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .join-btn:hover::before {
+            left: 100%;
+        }
+
+        .join-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .join-btn.joined {
+            background: linear-gradient(135deg, #2d5016, #4a7c2a);
+            border-color: #5d8f36;
+            color: #fff;
+        }
+
+        .join-btn.joined:hover {
+            background: linear-gradient(135deg, #365a1b, #558b2f);
+        }
+
+        .btn-icon {
+            font-size: 1.1rem;
+        }
+
+        .participant-count {
+            margin-top: 15px;
+            color: #888;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .participant-count span {
+            color: #fff;
+            font-weight: 500;
+        }
+
+        .editable {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            padding: 5px 10px;
+            color: #fff;
+            font-weight: 500;
+            cursor: text;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .editable:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .editable:focus {
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .invitation-card {
+                padding: 20px;
+            }
+
+            .title {
+                font-size: 2rem;
+            }
+
+            .photos-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="invitation-card">
+        <div class="header">
+            <h1 class="title">
+                🎉 THIỆP MỜI NGÀY THIẾU NHI 🎉
+            </h1>
+            <p class="subtitle">
+                "Tôi đã trưởng thành nhưng vẫn muốn được nhận quà!" 🎁
+            </p>
+        </div>
+
+        <div class="main-info">
+            <div class="info-item">
+                <div class="info-icon">👤</div>
+                <div class="info-label">Tên:</div>
+                <div class="info-value">
+                    <span class="editable" contenteditable="false">Thanhhh</span> (tuổi thơ dại: <span class="editable"
+                        contenteditable="false">"5"</span> tuổi)
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">📅</div>
+                <div class="info-label">Ngày:</div>
+                <div class="info-value">
+                    01/06/2025 - Ngày Quốc Tế Thiếu Nhi 🧸 Nhưng mà toi thấy thiếu Thanh nhìu hơn
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">🕐</div>
+                <div class="info-label">Thời gian:</div>
+                <div class="info-value">
+                    <span class="editable" contenteditable="false">17h50 có mặt để đón "em bé"</span>
+                </div>
+            </div>
+
+            <div class="info-item">
+                <div class="info-icon">📍</div>
+                <div class="info-label">Địa điểm:</div>
+                <div class="info-value">
+                    <span class="editable" contenteditable="false">K75 Hùng Vương</span>
+                </div>
+            </div>
+            <div class="info-item">
+                <div class="info-icon">👘</div>
+                <div class="info-label">Dresscode:</div>
+                <div class="info-value">
+                    <span class="editable" contenteditable="false">Be yourself :></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="activities-section">
+            <h2 class="section-title">Hoạt Động</h2>
+
+            <div class="activity">
+                <h3 class="activity-title">
+                    🎬 Xem Phim (Lilo và Stitch)
+                </h3>
+                <div class="activity-description">
+                    "Xem phim hoạt hình và ăn bỏng ngô như thuở bé!" 🍿
+                </div>
+                <div class="activity-time">
+                    <span class="time-label">Thời gian:</span>
+                    <span class="editable" contenteditable="false">18:10 - 20:15</span>
+                </div>
+                <div class="photos-grid">
+                    <div class="photo-placeholder">
+                        <img src="qxolv60bpb1-0msvxe9qja2-l0m2a8z9d23.jpg" alt="Nhà hàng Nhật"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="photo-placeholder">
+                        <img src="baddog_instagram_teaser2_poster_vietnam.jpg" alt="Nhà hàng Nhật"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="photo-placeholder">
+                        <img src="rap-470x700-1-2-poster.jpg" alt="Nhà hàng Nhật"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </div>
+                <div class="join-section">
+                    <button class="join-btn" onclick="joinActivity('Xem Phim')">
+                        <span class="btn-icon">🎬</span>
+                        Về làm trẻ con cùng tôi!
+                    </button>
+                    <div class="participant-count">
+                        <span id="movie-count">0</span> "trẻ con" đã đăng ký 👶
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity">
+                <h3 class="activity-title">
+                    🍽️ Ăn Uống
+                </h3>
+                <div class="activity-description">
+                    "Nhà Hàng Nhật"
+                </div>
+                <div class="activity-description">
+                    76 Võ Văn Kiệt, Sơn Trà, Đà Nẵng, Da Nang, Vietnam </div>
+                <div class="activity-time">
+                    <span class="time-label">Thời gian:</span>
+                    <span class="editable" contenteditable="false">20h40 - ...</span>
+                </div>
+                <div class="photos-grid">
+                    <div class="photo-placeholder">
+                        <img src="500040127_122164614086505215_4566411101508930725_n.jpg" alt="Nhà hàng Nhật"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="photo-placeholder">
+                        <img src="495574195_122161356554505215_4943307427064252773_n.jpg" alt="Nhà hàng Nhật"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                    <div class="photo-placeholder">
+                        <img src="487868553_122153436680505215_7210917222607352307_n.jpg" alt="Nhà hàng Nhật"
+                            style="width: 100%; height: 100%; object-fit: cover;">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="footer">
+            "Dù đã lớn nhưng trái tim vẫn là đứa trẻ 5 tuổi! Hãy đến và cùng tôi thoải mái 'làm trẻ con' trong ngày đặc
+            biệt này! 🎈✨"
+            <br><br>
+            <em>P/S: Ai mang theo gấu bông sẽ được ưu tiên ngồi hàng đầu! 🧸</em>
+        </div>
+    </div>
+
+    <script>
+        // Biến lưu trữ số lượng người tham gia
+        let movieParticipants = 0;
+        let foodParticipants = 0;
+        let userJoinedActivities = new Set();
+
+        // Hàm xử lý tham gia hoạt động
+        function joinActivity(activityName) {
+            const btn = event.target.closest('.join-btn');
+            const activityKey = activityName.toLowerCase().replace(' ', '-');
+
+            if (userJoinedActivities.has(activityKey)) {
+                // Hủy tham gia
+                userJoinedActivities.delete(activityKey);
+                btn.classList.remove('joined');
+
+                if (activityName === 'Xem Phim') {
+                    movieParticipants = Math.max(0, movieParticipants - 1);
+                    document.getElementById('movie-count').textContent = movieParticipants;
+                    btn.innerHTML = '<span class="btn-icon">🎬</span>Về làm trẻ con cùng tôi!';
+                } else if (activityName === 'Ăn Uống') {
+                    foodParticipants = Math.max(0, foodParticipants - 1);
+                    document.getElementById('food-count').textContent = foodParticipants;
+                    btn.innerHTML = '<span class="btn-icon">🍽️</span>Ăn kẹo cùng tôi nào!';
+                }
+            } else {
+                // Tham gia
+                userJoinedActivities.add(activityKey);
+                btn.classList.add('joined');
+
+                if (activityName === 'Xem Phim') {
+                    movieParticipants++;
+                    document.getElementById('movie-count').textContent = movieParticipants;
+                    btn.innerHTML = '<span class="btn-icon">✅</span>Đã đăng ký';
+                } else if (activityName === 'Ăn Uống') {
+                    foodParticipants++;
+                    document.getElementById('food-count').textContent = foodParticipants;
+                    btn.innerHTML = '<span class="btn-icon">✅</span>Đã đăng ký';
+                }
+            }
+
+            // Hiệu ứng animation
+            btn.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                btn.style.transform = '';
+            }, 150);
+        }
+
+
+
+        // Xử lý chỉnh sửa text
+        document.querySelectorAll('.editable').forEach(element => {
+            element.addEventListener('blur', function () {
+                if (!this.textContent.trim()) {
+                    this.textContent = this.getAttribute('data-placeholder') || 'Nhấp để chỉnh sửa';
+                }
+            });
+
+            element.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    this.blur();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
