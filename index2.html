@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One World – A Thousand Voices</title>
+
+    <!-- GSAP Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollToPlugin.min.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Arial', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: none;
+        }
+
+        /* ===== CUSTOM CURSOR (GenZ Style) ===== */
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: transform 0.2s ease;
+        }
+
+        .custom-cursor.hover {
+            transform: scale(2);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        /* ===== FLOATING PARTICLES ===== */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ===== GLITCH TEXT EFFECT ===== */
+        .glitch {
+            position: relative;
+            animation: glitch 2s infinite;
+        }
+
+        @keyframes glitch {
+
+            0%,
+            90%,
+            100% {
+                transform: translate(0);
+            }
+
+            20% {
+                transform: translate(-2px, 2px);
+            }
+
+            40% {
+                transform: translate(-2px, -2px);
+            }
+
+            60% {
+                transform: translate(2px, 2px);
+            }
+
+            80% {
+                transform: translate(2px, -2px);
+            }
+        }
+
+        /* ===== DOT NAVIGATION (Enhanced) ===== */
+        .dot-navigation {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.6));
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .dot::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s ease;
+            opacity: 0;
+        }
+
+        .dot:hover::before {
+            opacity: 1;
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%) translateY(-100%) rotate(45deg);
+            }
+
+            100% {
+                transform: translateX(100%) translateY(100%) rotate(45deg);
+            }
+        }
+
+        .dot.active {
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            transform: scale(1.8);
+            box-shadow: 0 0 25px rgba(76, 175, 80, 0.8), 0 0 50px rgba(76, 175, 80, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .dot:hover {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.9));
+            transform: scale(1.4);
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+        }
+
+        /* ===== SECTIONS STYLING ===== */
+        .section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 20px;
+            position: relative;
+        }
+
+        /* SECTION 1 - INTRO (Enhanced) */
+        .section-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            text-align: center;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .section-1::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1.5" fill="rgba(255,255,255,0.05)"/><circle cx="50" cy="10" r="0.8" fill="rgba(255,255,255,0.08)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+        }
+
+        .intro-title {
+            font-size: 5rem;
+            font-weight: 900;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(50px);
+            background: linear-gradient(45deg, #fff, #f093fb, #81C784);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro-subtitle {
+            font-size: 2.2rem;
+            font-weight: 300;
+            max-width: 800px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(30px);
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro-lines {
+            font-size: 1.4rem;
+            margin-top: 50px;
+            max-width: 700px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro-line {
+            opacity: 0;
+            transform: translateY(20px);
+            margin: 15px 0;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* ===== TRENDY BADGES ===== */
+        .trending-badge {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* ===== SOCIAL MEDIA ICONS ===== */
+        .social-icons {
+            position: fixed;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 1000;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .social-icon:hover {
+            transform: scale(1.2) rotate(10deg);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        /* SECTION 2 - KENYA */
+        .section-2 {
+            background: linear-gradient(135deg, #ff9a56 0%, #ff6b35 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-container {
+            display: flex;
+            align-items: center;
+            max-width: 1200px;
+            width: 100%;
+            gap: 60px;
+        }
+
+        .story-content {
+            flex: 1;
+            opacity: 0;
+            transform: translateX(-100px);
+        }
+
+        .story-image {
+            flex: 1;
+            opacity: 0;
+            transform: translateX(100px);
+        }
+
+        .story-image img {
+            width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .country-tag {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.4));
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .country-tag::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .country-tag:hover::before {
+            left: 100%;
+        }
+
+        /* ===== STORY CARDS WITH 3D TILT ===== */
+        .story-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 25px;
+            padding: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+            transform-style: preserve-3d;
+        }
+
+        .story-card {
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+
+        .story-card:hover {
+            transform: rotateY(5deg) rotateX(5deg) translateZ(50px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+        }
+
+        /* ===== EMOJI REACTIONS ===== */
+        .emoji-reactions {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .emoji-react {
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            filter: grayscale(100%);
+        }
+
+        .emoji-react:hover {
+            transform: scale(1.5) rotate(15deg);
+            filter: grayscale(0%);
+        }
+
+        .emoji-react.active {
+            animation: bounce-emoji 0.6s ease;
+            filter: grayscale(0%);
+        }
+
+        @keyframes bounce-emoji {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateY(0);
+            }
+
+            40% {
+                transform: translateY(-20px);
+            }
+
+            60% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .story-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .story-quote {
+            font-size: 1.3rem;
+            font-style: italic;
+            margin: 30px 0;
+            padding-left: 20px;
+            border-left: 4px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .story-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* SECTION 3 - VIETNAM (Enhanced Chat) */
+        .section-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%);
+            position: relative;
+        }
+
+        .chat-container {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 50px;
+            backdrop-filter: blur(20px);
+            opacity: 0;
+            transform: scale(0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chat-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: rotate 4s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .chat-message {
+            margin: 20px 0;
+            padding: 15px 25px;
+            border-radius: 25px;
+            max-width: 80%;
+            opacity: 0;
+            transform: translateY(20px);
+            position: relative;
+            animation: typing 0.5s ease-in-out;
+        }
+
+        @keyframes typing {
+            from {
+                width: 0;
+            }
+
+            to {
+                width: auto;
+            }
+        }
+
+        .user-message {
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            margin-left: auto;
+            text-align: right;
+            box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+        }
+
+        .bot-message {
+            background: linear-gradient(45deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.4));
+            margin-right: auto;
+            box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 15px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            margin: 20px 0;
+            width: fit-content;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            animation: typing-animation 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing-animation {
+
+            0%,
+            60%,
+            100% {
+                transform: translateY(0);
+            }
+
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* SECTION 4 - COLOMBIA */
+        .section-4 {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            position: relative;
+            color: #333;
+        }
+
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            background: url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&h=1080&fit=crop') center/cover;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        .eco-content {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 60px;
+            border-radius: 25px;
+            max-width: 900px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            transform: translateY(100px);
+        }
+
+        .eco-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* SECTION 5 - STATISTICS */
+        .section-5 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+            color: #333;
+        }
+
+        .stats-container {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .stats-title {
+            font-size: 3rem;
+            margin-bottom: 60px;
+            color: white;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 20px;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ff6b35;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #666;
+        }
+
+        /* SECTION 6 - CALL TO ACTION */
+        .section-6 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            text-align: center;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            width: 100%;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .cta-title {
+            font-size: 3.5rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .cta-subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 50px;
+            opacity: 0.9;
+        }
+
+        .cta-form {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 50px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .form-group {
+            margin: 25px 0;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 18px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 768px) {
+            .intro-title {
+                font-size: 2.5rem;
+            }
+
+            .story-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .story-content,
+            .story-image {
+                transform: translateY(50px);
+            }
+
+            .dot-navigation {
+                right: 15px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-form {
+                padding: 30px 20px;
+            }
+        }
+
+        /* SCROLL INDICATOR */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            z-index: 100;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            20%,
+            50%,
+            80%,
+            100% {
+                transform: translateX(-50%) translateY(0);
+            }
+
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- PARTICLES BACKGROUND -->
+    <div class="particles" id="particles"></div>
+
+    <!-- CUSTOM CURSOR -->
+    <div class="custom-cursor" id="cursor"></div>
+
+    <!-- SOCIAL MEDIA ICONS -->
+    <div class="social-icons">
+        <div class="social-icon" title="TikTok">📱</div>
+        <div class="social-icon" title="Instagram">📸</div>
+        <div class="social-icon" title="Twitter">🐦</div>
+        <div class="social-icon" title="LinkedIn">💼</div>
+    </div>
+
+    <!-- DOT NAVIGATION -->
+    <div class="dot-navigation">
+        <div class="dot active" data-section="0"></div>
+        <div class="dot" data-section="1"></div>
+        <div class="dot" data-section="2"></div>
+        <div class="dot" data-section="3"></div>
+        <div class="dot" data-section="4"></div>
+        <div class="dot" data-section="5"></div>
+    </div>
+
+    <!-- SCROLL INDICATOR -->
+    <div class="scroll-indicator">
+        <svg width="30" height="50" viewBox="0 0 30 50" fill="white">
+            <rect x="12" y="10" width="6" height="20" rx="3" fill="rgba(255,255,255,0.7)" />
+            <path d="M15 35 L10 40 L15 45 L20 40 Z" fill="rgba(255,255,255,0.7)" />
+        </svg>
+    </div>
+
+    <!-- SECTION 1: INTRO -->
+    <section class="section section-1" id="section-0">
+        <div class="trending-badge">🔥 Viral Story</div>
+        <h1 class="intro-title glitch">One World</h1>
+        <p class="intro-subtitle">A Thousand Voices</p>
+        <div class="intro-lines">
+            <p class="intro-line">🌍 Thế giới rộng lớn, nhưng chúng ta giống nhau hơn bạn nghĩ.</p>
+            <p class="intro-line">💪 Mỗi ngày, hàng triệu bạn trẻ đang thay đổi thế giới.</p>
+            <p class="intro-line">✨ Đây là câu chuyện của họ.</p>
+        </div>
+        <div class="emoji-reactions">
+            <span class="emoji-react" onclick="reactEmoji(this)">❤️</span>
+            <span class="emoji-react" onclick="reactEmoji(this)">🔥</span>
+            <span class="emoji-react" onclick="reactEmoji(this)">🚀</span>
+            <span class="emoji-react" onclick="reactEmoji(this)">💯</span>
+        </div>
+    </section>
+
+    <!-- SECTION 2: KENYA -->
+    <section class="section section-2" id="section-1">
+        <div class="story-container">
+            <div class="story-content story-card">
+                <span class="country-tag">🇰🇪 KENYA</span>
+                <h2 class="story-title">💧 Ứng dụng chia sẻ nước tưới</h2>
+                <p class="story-quote">"Nước không chỉ là sự sống, mà còn là cơ hội" 💫</p>
+                <p class="story-description">
+                    Amina, 22 tuổi, đã tạo ra một ứng dụng giúp nông dân chia sẻ nguồn nước tưới tiêu.
+                    Ứng dụng đã giúp 15,000 nông dân tiết kiệm 40% lượng nước sử dụng và tăng 30% năng suất cây trồng.
+                    🌱
+                </p>
+            </div>
+            <div class="story-image">
+                <img src="https://images.unsplash.com/photo-1594736797933-d0401ba2fe65?w=600&h=400&fit=crop"
+                    alt="Kenya Water Sharing">
+            </div>
+        </div>
+        <div class="emoji-reactions">
+            <span class="emoji-react" onclick="reactEmoji(this)">💧</span>
+            <span class="emoji-react" onclick="reactEmoji(this)">🌱</span>
+            <span class="emoji-react" onclick="reactEmoji(this)">👏</span>
+            <span class="emoji-react" onclick="reactEmoji(this)">🙌</span>
+        </div>
+    </section>
+
+    <!-- SECTION 3: VIETNAM -->
+    <!-- SECTION 3: VIETNAM (Updated with split layout) -->
+    <section class="section section-3" id="section-2">
+        <div class="story-container">
+            <!-- Left side: Chat Simulation -->
+            <div class="" style="flex: 1;">
+                <div class="chat-header">
+                    <span class="country-tag">🇻🇳 VIỆT NAM</span>
+                    <h2 class="story-title">Chatbot dạy tiếng Anh</h2>
+                </div>
+                <div class="chat-messages" id="chat-messages">
+                    <div class="chat-message bot-message">Xin chào! Tôi là EduBot. Bạn muốn học gì hôm nay?</div>
+                    <div class="chat-message user-message">Hello! How are you today?</div>
+                    <div class="chat-message bot-message">Great! "How are you" nghĩa là "Bạn có khỏe không?" 🌟</div>
+                    <div class="chat-message user-message">Can you teach me more phrases?</div>
+                    <div class="chat-message bot-message">Tất nhiên! Minh, 19 tuổi, đã tạo ra tôi để giúp 50,000+ học
+                        sinh Việt Nam học tiếng Anh miễn phí!</div>
+                </div>
+            </div>
+
+            <!-- Right side: Information card -->
+            <div class="story-card" style="flex: 1;">
+                <h3 class="story-title">📘 Câu chuyện phía sau EduBot</h3>
+                <p class="story-description">
+                    Minh – sinh viên ngành CNTT – đã xây dựng chatbot EduBot để hỗ trợ học sinh vùng sâu vùng xa học
+                    tiếng Anh miễn phí.
+                    Cậu tự học lập trình AI, thiết kế giao diện thân thiện và huấn luyện mô hình trả lời tự nhiên bằng
+                    dữ liệu do chính học sinh gửi về.
+                </p>
+                <ul style="margin-top:15px;">
+                    <li> Chatbot hỗ trợ 24/7, trả lời hơn 1 triệu câu mỗi tháng.</li>
+                    <li> Đã triển khai tại hơn 100 trường học trên cả nước.</li>
+                    <li> Đạt giải Nhất cuộc thi Sáng tạo Trẻ Việt Nam 2024.</li>
+                    <li> Phiên bản quốc tế đang được thử nghiệm.</li>
+                </ul>
+                <p style="margin-top: 20px; font-style: italic;">
+                    "Giáo dục không nên phụ thuộc vào điều kiện kinh tế" – Minh
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- SECTION 4: COLOMBIA -->
+    <section class="section section-4" id="section-3">
+        <div class="parallax-bg"></div>
+        <div class="eco-content">
+            <span class="country-tag" style="color: #333;">🇨🇴 COLOMBIA</span>
+            <span class="eco-icon">🍌</span>
+            <h2 class="story-title">Túi phân hủy sinh học từ vỏ chuối</h2>
+            <p class="story-quote" style="color: #666;">"Rác thải hôm nay, giải pháp ngày mai"</p>
+            <p class="story-description">
+                Carlos, 20 tuổi, đã biến vỏ chuối thành túi nhựa phân hủy sinh học.
+                Sản phẩm đã thay thế 2 triệu túi nhựa thông thường và tạo việc làm cho 500 nông dân địa phương.
+            </p>
+        </div>
+    </section>
+
+    <!-- SECTION 5: STATISTICS -->
+    <section class="section section-5" id="section-4">
+        <div class="stats-container">
+            <h2 class="stats-title">Tác động toàn cầu</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-number" data-count="2500000">0</div>
+                    <div class="stat-label">Người được hỗ trợ</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="89">0</div>
+                    <div class="stat-label">Quốc gia tham gia</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="12500">0</div>
+                    <div class="stat-label">Dự án được triển khai</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" data-count="75">0%</div>
+                    <div class="stat-label">Tăng trưởng năm qua</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: CALL TO ACTION -->
+    <section class="section section-6" id="section-5">
+        <div class="cta-content">
+            <h2 class="cta-title">Bạn là chương tiếp theo...</h2>
+            <p class="cta-subtitle">Chia sẻ câu chuyện của bạn và trở thành phần của cuộc cách mạng toàn cầu</p>
+
+            <form class="cta-form" onsubmit="handleFormSubmit(event)">
+                <div class="form-group">
+                    <label for="name">Tên của bạn</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="country">Quốc gia</label>
+                    <input type="text" id="country" name="country" required>
+                </div>
+                <div class="form-group">
+                    <label for="story">Câu chuyện của bạn</label>
+                    <textarea id="story" name="story"
+                        placeholder="Bạn đang giải quyết vấn đề gì? Tác động của bạn như thế nào?" required></textarea>
+                </div>
+                <button type="submit" class="submit-btn">Chia sẻ câu chuyện</button>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        // ===== GSAP SETUP =====
+        gsap.registerPlugin(ScrollTrigger, ScrollToPlugin);
+
+        // ===== DOT NAVIGATION FUNCTIONALITY =====
+        const dots = document.querySelectorAll('.dot');
+        const sections = document.querySelectorAll('.section');
+
+        // Click navigation
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                gsap.to(window, {
+                    duration: 1.5,
+                    scrollTo: { y: sections[index], offsetY: 0 },
+                    ease: "power2.inOut"
+                });
+            });
+        });
+
+        // Update active dot on scroll
+        sections.forEach((section, index) => {
+            ScrollTrigger.create({
+                trigger: section,
+                start: "top center",
+                end: "bottom center",
+                onEnter: () => updateActiveDot(index),
+                onEnterBack: () => updateActiveDot(index),
+            });
+        });
+
+        function updateActiveDot(index) {
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        }
+
+        // ===== SECTION 1: INTRO ANIMATIONS =====
+        const introTl = gsap.timeline();
+        introTl
+            .to('.intro-title', { opacity: 1, y: 0, duration: 1.5, ease: "power2.out" })
+            .to('.intro-subtitle', { opacity: 1, y: 0, duration: 1.2, ease: "power2.out" }, "-=0.8")
+            .to('.intro-line', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.3,
+                ease: "power2.out"
+            }, "-=0.5");
+
+        // Hide scroll indicator after first scroll
+        ScrollTrigger.create({
+            trigger: ".section-2",
+            start: "top bottom",
+            onEnter: () => gsap.to('.scroll-indicator', { opacity: 0, duration: 0.5 }),
+            onLeaveBack: () => gsap.to('.scroll-indicator', { opacity: 1, duration: 0.5 })
+        });
+
+        // ===== SECTION 2: KENYA SLIDE ANIMATION =====
+        ScrollTrigger.create({
+            trigger: ".section-2",
+            start: "top 80%",
+            animation: gsap.timeline()
+                .to('.section-2 .story-content', { opacity: 1, x: 0, duration: 1, ease: "power2.out" })
+                .to('.section-2 .story-image', { opacity: 1, x: 0, duration: 1, ease: "power2.out" }, "-=0.6")
+        });
+
+        // ===== SECTION 3: VIETNAM CHAT ANIMATION =====
+        ScrollTrigger.create({
+            trigger: ".section-3",
+            start: "top 80%",
+            animation: gsap.timeline()
+                .to('.chat-container', { opacity: 1, scale: 1, duration: 1, ease: "back.out(1.7)" })
+                .to('.chat-message', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    stagger: 0.4,
+                    ease: "power2.out"
+                }, "-=0.5")
+        });
+        ScrollTrigger.create({
+            trigger: ".section-3",
+            start: "top 80%",
+            animation: gsap.timeline()
+                .to('.chat-container', {
+                    opacity: 1,
+                    scale: 1,
+                    duration: 1,
+                    ease: "back.out(1.7)"
+                })
+                .to('.chat-message', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.6,
+                    stagger: 0.4,
+                    ease: "power2.out"
+                }, "-=0.5")
+                .to('.section-3 .story-card', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 1,
+                    ease: "power2.out"
+                }, "-=0.3") // xuất hiện ngay sau đoạn chat
+        });
+
+
+        // ===== SECTION 4: COLOMBIA PARALLAX =====
+        gsap.to('.parallax-bg', {
+            yPercent: -30,
+            ease: "none",
+            scrollTrigger: {
+                trigger: ".section-4",
+                start: "top bottom",
+                end: "bottom top",
+                scrub: true
+            }
+        });
+
+        ScrollTrigger.create({
+            trigger: ".section-4",
+            start: "top 80%",
+            animation: gsap.to('.eco-content', {
+                opacity: 1,
+                y: 0,
+                duration: 1.2,
+                ease: "power2.out"
+            })
+        });
+
+        // ===== SECTION 5: STATISTICS COUNTER =====
+        ScrollTrigger.create({
+            trigger: ".section-5",
+            start: "top 80%",
+            animation: gsap.timeline()
+                .to('.stats-title', { opacity: 1, y: 0, duration: 1, ease: "power2.out" })
+                .to('.stat-item', {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.8,
+                    stagger: 0.2,
+                    ease: "back.out(1.7)"
+                }, "-=0.5")
+                .call(animateCounters)
+        });
+
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-count'));
+                const isPercentage = counter.textContent.includes('%');
+
+                gsap.to({ value: 0 }, {
+                    value: target,
+                    duration: 2,
+                    ease: "power2.out",
+                    onUpdate: function () {
+                        const current = Math.round(this.targets()[0].value);
+                        counter.textContent = isPercentage ? current + '%' : current.toLocaleString();
+                    }
+                });
+            });
+        }
+
+        // ===== SECTION 6: CALL TO ACTION =====
+        ScrollTrigger.create({
+            trigger: ".section-6",
+            start: "top 80%",
+            animation: gsap.to('.cta-content', {
+                opacity: 1,
+                scale: 1,
+                duration: 1.2,
+                ease: "back.out(1.7)"
+            })
+        });
+
+        // ===== FORM SUBMISSION =====
+        function handleFormSubmit(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const name = formData.get('name');
+            const country = formData.get('country');
+            const story = formData.get('story');
+
+            // Create success message
+            const successMessage = document.createElement('div');
+            successMessage.innerHTML = `
+                <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); 
+                           padding: 30px; border-radius: 15px; text-align: center; 
+                           margin-top: 30px; color: white;">
+                    <h3>🎉 Cảm ơn ${name}!</h3>
+                    <p>Câu chuyện từ ${country} của bạn đã được ghi nhận. 
+                    Chúng tôi sẽ liên hệ sớm để chia sẻ câu chuyện của bạn với thế giới!</p>
+                </div>
+            `;
+
+            // Replace form with success message
+            event.target.style.display = 'none';
+            event.target.parentNode.appendChild(successMessage);
+
+            // Animate success message
+            gsap.fromTo(successMessage,
+                { opacity: 0, scale: 0.8 },
+                { opacity: 1, scale: 1, duration: 0.8, ease: "back.out(1.7)" }
+            );
+        }
+
+        // ===== PERFORMANCE OPTIMIZATION =====
+        ScrollTrigger.refresh();
+
+        // Update ScrollTrigger on window resize
+        window.addEventListener('resize', () => {
+            ScrollTrigger.refresh();
+        });
+    </script>
+    <script>
+        const cursor = document.getElementById('cursor');
+
+        // Di chuyển theo chuột
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+
+        // Tăng kích thước khi hover vào phần tử có thể nhấp
+        const hoverTargets = ['a', 'button', '.dot', '.submit-btn', '.social-icon'];
+
+        hoverTargets.forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                el.addEventListener('mouseenter', () => {
+                    cursor.classList.add('hover');
+                });
+                el.addEventListener('mouseleave', () => {
+                    cursor.classList.remove('hover');
+                });
+            });
+        });
+
+        // Ẩn khi ra khỏi cửa sổ
+        document.addEventListener('mouseleave', () => cursor.style.opacity = 0);
+        document.addEventListener('mouseenter', () => cursor.style.opacity = 1);
+    </script>
+
+</body>
+
+</html>
